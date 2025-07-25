@@ -20,8 +20,8 @@ ADDONS = {}
 ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
-# CONCURRENT_REQUESTS = 16
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
+CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 8
 DOWNLOAD_DELAY = 1
 
 # Disable cookies (enabled by default)
@@ -38,10 +38,10 @@ DOWNLOAD_DELAY = 1
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-SPIDER_MIDDLEWARES = {
-    # "ethiojobsScraper.middlewares.EthiojobsscraperSpiderMiddleware": 543,
-    "ethiojobsScraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 543,
-}
+# SPIDER_MIDDLEWARES = {
+#     # "ethiojobsScraper.middlewares.EthiojobsscraperSpiderMiddleware": 543,
+#     # "ethiojobsScraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 543,
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -98,3 +98,17 @@ SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 5
+
+
+# settings.py
+
+
+DOWNLOAD_HANDLERS = {
+    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+PLAYWRIGHT_LAUNCH_OPTIONS = {
+    "headless": True,  # Set to False if you want to see the browser
+}

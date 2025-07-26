@@ -33,13 +33,15 @@ class EthiojobsSpider(scrapy.Spider):
 
             """
             #  https://ethiojobs.net/jobs?page=2&isFeatured=false
-        next_page = response.css(
-            "button.MuiButton-textPrimary[aria-label='Next']::attr(href)"
-        ).get()
-        print(f"Next page: {next_page}")
-        if next_page:
-            next_page_url = response.urljoin(next_page)
+        pagination_list = response.xpath('//button[starts-with(@aria-label, "Go to page") or starts-with(@aria-label, "page ")]')
+        last_page = pagination_list[-1].xpath("./@aria-label").get().strip().split()[-1]
+ 
+ 
+ 
+        for page in range(1,int(last_page) + 1):
+            next_page_url = f"https://ethiojobs.net/jobs?page={page}&isFeatured=false"
             print("next_page_url:", next_page_url)
             yield scrapy.Request(
                 next_page_url, callback=self.parse, meta={"playwright": True}
             )
+        print("Finished scraping all pages.")

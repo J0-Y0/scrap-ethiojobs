@@ -20,22 +20,6 @@ class EthiojobsSpider(scrapy.Spider):
                 "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-9.mui-style-rrl33y"
             )
 
-            # yield {
-            #     "title": main.css("a ::text").get(),
-            #     "company": job.xpath(
-            #         ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"
-            #     ).get(),
-            #     "about": job.css(
-            #         "p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text"
-            #     ).get(),
-            #     "location": job.xpath(
-            #         ".//img[@alt='location']/following-sibling::p/text()"
-            #     ).get(),
-            #     "Deadline": job.xpath(
-            #         ".//img[@alt='employment']/following-sibling::p/text()"
-            #     ).get(),
-            #     "url": response.urljoin(main.css("a::attr(href)").get()),
-            # }
             item["title"] = main.css("a ::text").get()
             item["company"] = job.xpath(
                 ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"

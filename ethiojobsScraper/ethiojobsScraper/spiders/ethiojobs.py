@@ -1,4 +1,5 @@
 import scrapy
+from ethiojobsScraper.items import EthiojobsscraperItem
 
 
 class EthiojobsSpider(scrapy.Spider):
@@ -11,30 +12,45 @@ class EthiojobsSpider(scrapy.Spider):
 
     def parse(self, response):
         job_cards = response.css("div.job-card-item-container")
-        print(f"Found {len(job_cards)} job listings")
 
+        item = EthiojobsscraperItem()
         for job in job_cards:
 
             main = job.css(
                 "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-9.mui-style-rrl33y"
             )
 
-            yield {
-                "title": main.css("a ::text").get(),
-                "company": job.xpath(
-                    ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"
-                ).get(),
-                "about": job.css(
-                    "p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text"
-                ).get(),
-                "location": job.xpath(
-                    ".//img[@alt='location']/following-sibling::p/text()"
-                ).get(),
-                "Deadline": job.xpath(
-                    ".//img[@alt='employment']/following-sibling::p/text()"
-                ).get(),
-                "url": response.urljoin(main.css("a::attr(href)").get()),
-            }
+            # yield {
+            #     "title": main.css("a ::text").get(),
+            #     "company": job.xpath(
+            #         ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"
+            #     ).get(),
+            #     "about": job.css(
+            #         "p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text"
+            #     ).get(),
+            #     "location": job.xpath(
+            #         ".//img[@alt='location']/following-sibling::p/text()"
+            #     ).get(),
+            #     "Deadline": job.xpath(
+            #         ".//img[@alt='employment']/following-sibling::p/text()"
+            #     ).get(),
+            #     "url": response.urljoin(main.css("a::attr(href)").get()),
+            # }
+            item["title"] = main.css("a ::text").get()
+            item["company"] = job.xpath(
+                ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"
+            ).get()
+            item["about"] = job.css(
+                "p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text"
+            ).get()
+            item["location"] = job.xpath(
+                ".//img[@alt='location']/following-sibling::p/text()"
+            ).get()
+            item["deadline"] = job.xpath(
+                ".//img[@alt='employment']/following-sibling::p/text()"
+            ).get()
+            item["url"] = response.urljoin(main.css("a::attr(href)").get())
+            yield item
 
         pagination_list = response.xpath(
             '//button[starts-with(@aria-label, "Go to page") or starts-with(@aria-label, "page ")]'
@@ -43,7 +59,6 @@ class EthiojobsSpider(scrapy.Spider):
 
         for page in range(1, int(last_page) + 1):
             next_page_url = f"https://ethiojobs.net/jobs?page={page}&isFeatured=false"
-            print("next_page_url:", next_page_url)
             yield scrapy.Request(
                 next_page_url, callback=self.parse, meta={"playwright": True}
             )

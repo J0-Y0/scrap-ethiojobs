@@ -14,40 +14,34 @@ class EthiojobsSpider(scrapy.Spider):
         print(f"Found {len(job_cards)} job listings")
 
         for job in job_cards:
-            """
-            <a href="/job/Xedb0EIl4z-hr-officer"><p class="MuiTypography-root MuiTypography-body1 mui-style-tz3at">HR Officer</p></a>
-            """    
-            main = job.css("div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-9.mui-style-rrl33y")
-            print("=======================")
-            print(main.css("a ::text").get())
-            print("====+==-0==3===============")
-            print(job.css("p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text").get()),
+
+            main = job.css(
+                "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-9.mui-style-rrl33y"
+            )
 
             yield {
                 "title": main.css("a ::text").get(),
-             
-                
                 "company": job.xpath(
                     ".//div[contains(@class,'MuiGrid-container')][.//p[contains(text(),'by')]]//a/button/text()"
                 ).get(),
-                "about": job.css("p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text").get(),
-
+                "about": job.css(
+                    "p.MuiTypography-root.MuiTypography-body1.mui-style-10rtjdg::text"
+                ).get(),
                 "location": job.xpath(
                     ".//img[@alt='location']/following-sibling::p/text()"
                 ).get(),
                 "Deadline": job.xpath(
                     ".//img[@alt='employment']/following-sibling::p/text()"
                 ).get(),
-                "url": main.css("a::attr(href)").get(),
-
+                "url": response.urljoin(main.css("a::attr(href)").get()),
             }
-            
-        pagination_list = response.xpath('//button[starts-with(@aria-label, "Go to page") or starts-with(@aria-label, "page ")]')
+
+        pagination_list = response.xpath(
+            '//button[starts-with(@aria-label, "Go to page") or starts-with(@aria-label, "page ")]'
+        )
         last_page = pagination_list[-1].xpath("./@aria-label").get().strip().split()[-1]
- 
- 
- 
-        for page in range(1,int(last_page) + 1):
+
+        for page in range(1, int(last_page) + 1):
             next_page_url = f"https://ethiojobs.net/jobs?page={page}&isFeatured=false"
             print("next_page_url:", next_page_url)
             yield scrapy.Request(

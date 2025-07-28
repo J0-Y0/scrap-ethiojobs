@@ -46,7 +46,7 @@ DOWNLOAD_DELAY = 1
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     #    "ethiojobsScraper.middlewares.EthiojobsscraperDownloaderMiddleware": 543,
-    "ethiojobsScraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 400,
+    "ethiojobsScraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 500,
 }
 
 # Enable or disable extensions
@@ -59,6 +59,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     "ethiojobsScraper.pipelines.EthiojobsscraperPipeline": 300,
+    "ethiojobsScraper.pipelines.SaveToPostgresDatabase": 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

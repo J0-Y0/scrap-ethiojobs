@@ -1,7 +1,6 @@
 # Ethiojobs Scraper
 
-A professional Scrapy-based web scraper for extracting job listings from ethiojobs.net. This project utilizes Playwright for headless browsing and ScrapeOps for request headers management.
-
+A robust job scraping tool built with Scrapy, designed to extract job listings from ethiojobs.net. It leverages Playwright for headless browser automation and ScrapeOps for efficient request header management and proxy handling, ensuring reliable and scalable data extraction.
 ## Features
 - **Job Data Extraction**: Scrapes title, company, description, location, deadline, and URL
 - **Automatic Pagination**: Handles multi-page job listings automatically
